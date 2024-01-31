@@ -10,7 +10,15 @@ import { CiBookmark } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
 import { CiCircleMore } from "react-icons/ci";
 import FeedCard from '@/Components/feedCards';
+import { CredentialResponse,  GoogleLogin } from '@react-oauth/google';
 import { title } from 'process';
+import handler from './api/hello';
+import React, { useCallback } from 'react';
+import {toast} from 'react-hot-toast';
+import { verifyUserGoogleTokenQuery } from '../graphql/query/user';
+import { graphql } from '@/gql';
+import { graphqlClient } from "@/clients/api";
+import { User } from '@/gql/graphql';
 
 
 
@@ -53,6 +61,21 @@ const sidebarbutton:TwitterSidebarbutton[]=[
 ]
 
 export default function Home() {
+
+  const handleLoginWithGoogle = useCallback(async (cred: CredentialResponse) => {
+    const googleToken = cred.credential;
+    if (!googleToken) return toast.error('Google token not found');
+    try {
+      const data =
+      toast.success('Verified success');
+      console.log(verifyGoogleToken);
+    } catch (error) {
+      console.error('Error verifying Google token:', error);
+      toast.error('Error verifying Google token');
+    }
+  }, []);
+  
+
   return (
     <div>
       <div className='grid grid-cols-12 h-screen w-screen px-56'>
@@ -82,8 +105,13 @@ export default function Home() {
           <FeedCard/>
           <FeedCard/>
         </div>
-        <div className='col-span-3'></div>
-      </div>
+  <div className='col-span-3 p-5'>
+    <div className='p-4 bg-slate-background rounded-lg' >
+      <h1 className='my-2 text-1xl'>New to Twitter</h1>
+        <GoogleLogin onSuccess={handleLoginWithGoogle}/>
+     </div>
     </div>
+  </div>
+</div>
   )
 }
