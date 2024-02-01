@@ -61,12 +61,13 @@ const sidebarbutton:TwitterSidebarbutton[]=[
 ]
 
 export default function Home() {
-
+  
   const handleLoginWithGoogle = useCallback(async (cred: CredentialResponse) => {
     const googleToken = cred.credential;
     if (!googleToken) return toast.error('Google token not found');
+
     try {
-      const data =
+      const { verifyGoogleToken } = await graphqlClient.request(verifyUserGoogleTokenQuery, { token: googleToken });
       toast.success('Verified success');
       console.log(verifyGoogleToken);
     } catch (error) {
